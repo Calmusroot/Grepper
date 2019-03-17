@@ -1,0 +1,79 @@
+filename, regex, \A.*_rsa\z, Private SSH key, null
+filename, regex, \A.*_dsa\z, Private SSH key, null
+filename, regex, \A.*_ed25519\z, Private SSH key, null
+filename, regex, \A.*_ecdsa\z, Private SSH key, null
+path, regex, \.?ssh/config\z, SSH configuration file, null
+extension, match, pem, Potential cryptographic private key, null
+extension, regex, \Akey(pair)?\z, Potential cryptographic private key, null
+extension, match, pkcs12, Potential cryptographic key bundle, null
+extension, match, pfx, Potential cryptographic key bundle, null
+extension, match, p12, Potential cryptographic key bundle, null
+extension, match, asc, Potential cryptographic key bundle, null
+filename, match, otr.private_key, Pidgin OTR private key, null
+filename, regex, \A\.?(bash_|zsh_|z)?history\z, Shell command history file, null
+filename, regex, \A\.?mysql_history\z, MySQL client command history file, null
+filename, regex, \A\.?psql_history\z, PostgreSQL client command history file, null
+filename, regex, \A\.?pgpass\z, PostgreSQL password file, null
+filename, regex, \A\.?irb_history\z, Ruby IRB console history file, null
+path, regex, \.?purple\/accounts\.xml\z, Pidgin chat client account configuration file, null
+path, regex, \.?xchat2?\/servlist_?\.conf\z, Hexchat/XChat IRC client server list configuration file, null
+path, regex, \.?irssi\/config\z, Irssi IRC client configuration file, null
+path, regex, \.?recon-ng\/keys\.db\z, Recon-ng web reconnaissance framework API key database, null
+filename, regex, \A\.?dbeaver-data-sources.xml\z, DBeaver SQL database manager configuration file, null
+filename, regex, \A\.?muttrc\z, Mutt e-mail client configuration file, null
+filename, regex, \A\.?s3cfg\z, S3cmd configuration file, null
+path, regex, \.?aws/credentials\z, AWS CLI credentials file, null
+filename, regex, \A\.?trc\z, T command-line Twitter client configuration file, null
+extension, match, ovpn, OpenVPN client configuration file, null
+filename, regex, \A\.?gitrobrc\z, Well, this is awkward... Gitrob configuration file, null
+filename, regex, \A\.?(bash|zsh)rc\z, Shell configuration file, Shell configuration files might contain information such as server hostnames, passwords and API keys.
+filename, regex, \A\.?(bash_|zsh_)?profile\z, Shell profile configuration file, Shell configuration files might contain information such as server hostnames, passwords and API keys.
+filename, regex, \A\.?(bash_|zsh_)?aliases\z, Shell command alias configuration file, Shell configuration files might contain information such as server hostnames, passwords and API keys.
+filename, match, secret_token.rb, Ruby On Rails secret token configuration file, If the Rails secret token is known, it can allow for remote code execution. (http://www.exploit-db.com/exploits/27527/)
+filename, match, omniauth.rb, OmniAuth configuration file, The OmniAuth configuration file might contain client application secrets.
+filename, match, carrierwave.rb, Carrierwave configuration file, Can contain credentials for online storage systems such as Amazon S3 and Google Storage.
+filename, match, schema.rb, Ruby On Rails database schema file, Contains information on the database schema of a Ruby On Rails application.
+filename, match, database.yml, Potential Ruby On Rails database configuration file, Might contain database credentials.
+filename, match, settings.py, Django configuration file, Might contain database credentials, online storage system credentials, secret keys, etc.
+filename, regex, \A(.*)?config(\.inc)?\.php\z, PHP configuration file, Might contain credentials and keys.
+extension, match, kdb, KeePass password manager database file, null
+extension, match, agilekeychain, 1Password password manager database file, null
+extension, match, keychain, Apple Keychain database file, null
+extension, regex, \Akey(store|ring)\z, GNOME Keyring database file, null
+extension, match, log, Log file, Log files might contain information such as references to secret HTTP endpoints, session IDs, user information, passwords and API keys.
+extension, match, pcap, Network traffic capture file, null
+extension, regex, \Asql(dump)?\z, SQL dump file, null
+extension, match, gnucash, GnuCash database file, null
+filename, regex, backup, Contains word: backup, null
+filename, regex, dump, Contains word: dump, null
+filename, regex, password, Contains word: password, null
+filename, regex, credential, Contains word: credential, null
+filename, regex, secret, Contains word: secret, null
+filename, regex, private.*key, Contains words: private, key, null
+filename, match, jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin.xml, Jenkins publish over SSH plugin file, null
+filename, match, credentials.xml, Potential Jenkins credentials file, null
+filename, regex, \A\.?htpasswd\z, Apache htpasswd file, null
+filename, regex, \A(\.|_)?netrc\z, Configuration file for auto-login process, Might contain username and password.
+extension, match, kwallet, KDE Wallet Manager database file, null
+filename, match, LocalSettings.php, Potential MediaWiki configuration file, null
+extension, match, tblk, Tunnelblick VPN configuration file, null
+path, regex, \.?gem/credentials\z, Rubygems credentials file, Might contain API key for a rubygems.org account.
+filename, regex, \A*\.pubxml(\.user)?\z, Potential MSBuild publish profile, null
+filename, match, Favorites.plist, Sequel Pro MySQL database manager bookmark file, null
+filename, match, configuration.user.xpl, Little Snitch firewall configuration file, Contains traffic rules for applications
+extension, match, dayone, Day One journal file, null
+filename, match, journal.txt, Potential jrnl journal file, null
+filename, regex, \A\.?tugboat\z, Tugboat DigitalOcean management tool configuration, null
+filename, regex, \A\.?git-credentials\z, git-credential-store helper credentials file, null
+filename, regex, \A\.?gitconfig\z, Git configuration file, null
+filename, match, knife.rb, Chef Knife configuration file, Might contain references to Chef servers
+path, regex, \.?chef/(.*)\.pem\z, Chef private key, Can be used to authenticate against Chef servers
+filename, match, proftpdpasswd, cPanel backup ProFTPd credentials file, Contains usernames and password hashes for FTP accounts
+filename, match, robomongo.json, Robomongo MongoDB manager configuration file, Might contain credentials for MongoDB databases
+filename, match, filezilla.xml, FileZilla FTP configuration file, Might contain credentials for FTP servers
+filename, match, recentservers.xml, FileZilla FTP recent servers file, Might contain credentials for FTP servers
+filename, match, ventrilo_srv.ini, Ventrilo server configuration file, Might contain passwords
+filename, regex, \A\.?dockercfg\z, Docker configuration file, Might contain credentials for public or private Docker registries
+filename, regex, \A\.?npmrc\z, NPM configuration file, Might contain credentials for NPM registries
+filename, match, terraform.tfvars, Terraform variable config file, Might contain credentials for terraform providers
+filename, regex, \A\.?env\z, Environment configuration file, null
