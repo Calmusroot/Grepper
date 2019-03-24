@@ -1,11 +1,10 @@
 package main
 
-/*\
+/*
 A simple program that takes in valid linux files or paths and checks whether they include critical or sensitive files.
 */
 
 // TODO: handling of filepaths
-// TODO: goroutines for regex
 // TODO: Stdin inputs for files
 // TODO: extension matching
 // TODO: cleanup of rules file
@@ -18,6 +17,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type rule struct {
@@ -29,13 +29,15 @@ type rule struct {
 	Part        string
 }
 
-func check(e error) {
+var wg sync.WaitGroup
+
+func check(e error) { //Implement a generic error function.
 	if e != nil {
 		panic(e)
 	}
 }
 
-func openFiles() []string { // will be replaced with reading form stdin
+func openFiles() []string { // Will be replaced with reading from stdin.
 	var files []string // declare a slice to hold all files
 
 	file, err := os.Open("/home/calmus/Tech/golang/src/github.com/Calmusroot/Grepper/files.txt") // open	fmt.Println("asd")
@@ -47,22 +49,12 @@ func openFiles() []string { // will be replaced with reading form stdin
 	}
 	return files
 }
-func checkRegex(rgx *regexp.Regexp, file string) bool {
+
+func foundRegex(rgx *regexp.Regexp, file string) bool {
 	if rgx.MatchString(file) {
 		return true
 	}
 	return false
-}
-func checkFiles(files []string, r rule, messages chan string) {
-	if r.Application == "regex" {
-		rgx, _ := regexp.Compile(r.Pattern)
-		for _, file := range files {
-			if checkRegex(rgx, file) {
-				// messages <- "[*] Found:", r.Name, "File:", file
-				messages <- "[*] Found:"
-			}
-		}
-	}
 }
 
 func loadRules() []rule {
@@ -87,13 +79,39 @@ func loadRules() []rule {
 	return rules
 }
 
+func checkFiles(files []string, r rule, messages chan string) {
+	defer wg.Done()
+	if r.Application == "regex" {
+		rgx, _ := regexp.Compile(r.Pattern)
+		for _, file := range files {
+			if foundRegex(rgx, file) {
+				fmt.Println("[*]", r.Name, "File:", file)
+			}
+		}
+	}
+	// I don't have to send data toa channel.
+	// results := ""
+	// messages <- results
+}
+
 func main() {
 	files := openFiles()
 	rules := loadRules()
-	messages := make(chan string)
+	messages := make(chan string, len(rules))
+
 	for _, r := range rules {
+		// fmt.Println(r)
+		wg.Add(1)
 		go checkFiles(files, r, messages)
 	}
-	msg := <-messages
-	fmt.Println(msg)
+
+	wg.Wait()
+	close(messages)
+	// maybe useful later !
+	// for item := range messages {
+	// 	if item != "/n" {
+	// 		// time.Sleep(1 * time.Second)
+	// 		fmt.Println(item)
+	// 	}
+	// }
 }
