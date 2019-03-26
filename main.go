@@ -30,7 +30,6 @@ type rule struct {
 }
 
 var wg sync.WaitGroup
-var fileQueue sync.WaitGroup
 
 func check(e error) { //Implement a generic error function.
 	if e != nil {
@@ -51,8 +50,7 @@ func openFiles() []string { // Will be replaced with reading from stdin.
 	return files
 }
 
-func findRegex(rgx *regexp.Regexp, file string) bool {
-	defer fileQueue.Done()
+func foundRegex(rgx *regexp.Regexp, file string) bool {
 	if rgx.MatchString(file) {
 		return true
 	}
@@ -83,18 +81,17 @@ func loadRules() []rule {
 
 func checkFiles(files []string, r rule, messages chan string) {
 	defer wg.Done()
-	switch r.Application {
-	case "regex":
+	if r.Application == "regex" {
 		rgx, _ := regexp.Compile(r.Pattern)
 		for _, file := range files {
-			fileQueue.Add(1)
-			if findRegex(rgx, file) {
+			if foundRegex(rgx, file) {
 				fmt.Println("[*]", r.Name, "File:", file)
 			}
 		}
-	case "match":
-
 	}
+	// I don't have to send data toa channel.
+	// results := ""
+	// messages <- results
 }
 
 func main() {
@@ -103,11 +100,11 @@ func main() {
 	messages := make(chan string, len(rules))
 
 	for _, r := range rules {
+		// fmt.Println(r)
 		wg.Add(1)
 		go checkFiles(files, r, messages)
 	}
 
-	fileQueue.Wait()
 	wg.Wait()
 	close(messages)
 	// maybe useful later !
