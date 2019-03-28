@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -31,17 +32,12 @@ type rule struct {
 
 var wg sync.WaitGroup
 
-func check(e error) { //Implement a generic error function.
-	if e != nil {
-		panic(e)
-	}
-}
-
 func openFiles() []string { // Will be replaced with reading from stdin.
-	var files []string // declare a slice to hold all files
-
+	var files []string
 	file, err := os.Open("/home/calmus/Tech/golang/src/github.com/Calmusroot/Grepper/files.txt") // open	fmt.Println("asd")
-	check(err)
+	if err != nil {
+		panic(err)
+	}
 	reader := bufio.NewScanner(file)
 	defer file.Close()
 	for reader.Scan() {
@@ -50,16 +46,11 @@ func openFiles() []string { // Will be replaced with reading from stdin.
 	return files
 }
 
-func foundRegex(rgx *regexp.Regexp, file string) bool {
-	if rgx.MatchString(file) {
-		return true
-	}
-	return false
-}
-
 func loadRules() []rule {
 	file, err := os.Open("/home/calmus/Tech/golang/src/github.com/Calmusroot/Grepper/rules.csv")
-	check(err)
+	if err != nil {
+		panic(err)
+	}
 	reader := csv.NewReader(file)
 	defer file.Close()
 	var rules []rule
@@ -79,39 +70,26 @@ func loadRules() []rule {
 	return rules
 }
 
-func checkFiles(files []string, r rule, messages chan string) {
+func checkFiles(paths []string, r rule) {
 	defer wg.Done()
-	if r.Application == "regex" {
-		rgx, _ := regexp.Compile(r.Pattern)
-		for _, file := range files {
-			if foundRegex(rgx, file) {
-				fmt.Println("[*]", r.Name, "File:", file)
-			}
+	for _, path := range paths {
+		file := filepath.Base(path)
+		m, err := regexp.MatchString(r.Pattern, file)
+		if m {
+			fmt.Println("[*]", r.Name, "File:", path, err)
 		}
 	}
-	// I don't have to send data toa channel.
-	// results := ""
-	// messages <- results
 }
 
 func main() {
-	files := openFiles()
+	paths := openFiles()
 	rules := loadRules()
-	messages := make(chan string, len(rules))
-
+	// messages := make(chan string, len(rules))
 	for _, r := range rules {
 		// fmt.Println(r)
 		wg.Add(1)
-		go checkFiles(files, r, messages)
+		go checkFiles(paths, r)
 	}
-
 	wg.Wait()
-	close(messages)
-	// maybe useful later !
-	// for item := range messages {
-	// 	if item != "/n" {
-	// 		// time.Sleep(1 * time.Second)
-	// 		fmt.Println(item)
-	// 	}
-	// }
+	// close(messages)
 }
